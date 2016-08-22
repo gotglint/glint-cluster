@@ -4,7 +4,7 @@ const operationUtils = require('../../../src/util/operation-utils');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
-const GlintClient = require('glint-lib');
+const GlintClient = require('glint-client');
 
 describe('Test operation utilities', function() {
   chai.use(chaiAsPromised);

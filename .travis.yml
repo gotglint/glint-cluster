@@ -1,0 +1,34 @@
+sudo: false
+
+language: node_js
+
+node_js:
+  - "6"
+
+env:
+  matrix:
+    - NODE_ENV=development
+  - CXX=g++-4.8
+
+cache:
+  - apt: true
+  - directories:
+    - node_modules
+
+addons:
+  apt:
+    packages:
+    - build-essential
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+
+before_script:
+  - npm install -g gulp node-gyp
+
+script:
+  - gulp
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

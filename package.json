@@ -1,15 +1,15 @@
 {
-  "name": "glint-server",
+  "name": "glint-cluster",
   "version": "0.0.1",
-  "description": "Glint Server",
+  "description": "Glint Cluster",
   "author": "Michael Laccetti <michael@laccetti.com> (https://laccetti.com)",
-  "homepage": "https://github.com/mlaccetti/glint/",
+  "homepage": "https://github.com/gotglint/glint-cluster/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mlaccetti/glint.git"
+    "url": "https://github.com/gotglint/glint-cluster.git"
   },
   "bugs": {
-    "url": "https://github.com/mlaccetti/glint/issues"
+    "url": "https://github.com/gotglint/glint-cluster/issues"
   },
   "license": "LGPL-2.1",
   "dependencies": {
@@ -20,9 +20,9 @@
     "commander": "2.9.0",
     "intel": "1.1.1",
     "jsonfn": "^0.31.0",
-    "lodash": "4.14.0",
+    "lodash": "4.15.0",
     "node-uuid": "1.4.7",
-    "primus": "6.0.0",
+    "primus": "6.0.1",
     "statsd-client": "0.2.2",
     "utf-8-validate": "1.2.1",
     "ws": "1.1.1"
@@ -33,10 +33,11 @@
     "del": "^2.2.1",
     "gulp": "3.9.1",
     "gulp-eslint": "3.0.1",
-    "gulp-mocha": "2.2.0",
+    "gulp-mocha": "3.0.1",
     "gulp-nodemon": "2.1.0",
-    "mocha": "2.5.3",
-    "nodemon": "1.9.2",
-    "object-sizeof": "1.0.10"
+    "mocha": "3.0.2",
+    "nodemon": "1.10.2",
+    "object-sizeof": "1.0.10",
+    "run-sequence": "^1.2.2"
   }
 }
