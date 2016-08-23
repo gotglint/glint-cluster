@@ -12,6 +12,10 @@
     "url": "https://github.com/gotglint/glint-cluster/issues"
   },
   "license": "LGPL-2.1",
+  "scripts": {
+    "build": "gulp",
+    "watch": "gulp watch"
+  },
   "dependencies": {
     "binary-pack": "^1.0.2",
     "bluebird": "3.4.1",

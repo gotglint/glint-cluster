@@ -9,6 +9,7 @@ const mocha = require('gulp-mocha');
 
 // utilities
 const del = require('del');
+const runSequence = require('run-sequence');
 
 gulp.task('clean', () => {
   return del(['dist/**']);
