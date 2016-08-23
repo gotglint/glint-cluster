@@ -29,7 +29,7 @@ describe('two step job engine test', function() {
   after(function() {
     log.info('Cleaning up after test.');
 
-    return [glintManager.shutdown(), glintSlave1.shutdown(), glintSlave2.shutdown()];
+    return [glintManager.shutdown(), glintSlave1.shutdown(), glintSlave2.shutdown(), pause];
   });
 
   it('runs a simple map-reduce operation that returns a string', function(done) {

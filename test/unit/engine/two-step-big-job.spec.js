@@ -1,5 +1,4 @@
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 
 const GlintClient = require('glint-client');
 
@@ -8,9 +7,7 @@ const log = require('../../../src/util/log').getLogger('engine.spec');
 const GlintManager = require('../../../src/engine/manager');
 const SlaveListener = require('../../../src/listener/slave-listener');
 
-describe('test the engine', function() {
-  chai.use(chaiAsPromised);
-  chai.should();
+describe('Two step big job tests', function() {
   const expect = chai.expect;
 
   const glintManager = new GlintManager('localhost', 45468);
@@ -32,7 +29,7 @@ describe('test the engine', function() {
   after(function() {
     log.info('Cleaning up after test.');
 
-    return [glintManager.shutdown(), glintSlave1.shutdown(), glintSlave2.shutdown()];
+    return [glintManager.shutdown(), glintSlave1.shutdown(), glintSlave2.shutdown(), pause];
   });
 
   it('runs a big map/reduce operation', function(done) {
@@ -43,11 +40,11 @@ describe('test the engine', function() {
     const input = [...new Array(50001).keys()].slice(1);
 
     const gc = new GlintClient();
-    const data = gc.parallelize(input).map((el) => {
+    const data = gc.parallelize(input).map(function(el) {
       return el + 324;
-    }).filter((el) => {
+    }).filter(function(el) {
       return el % 137 === 0;
-    }).reduce((a, b) => {
+    }).reduce(function(a, b) {
       return Number(a + b);
     }, 0).getData();
 
@@ -58,7 +55,7 @@ describe('test the engine', function() {
     expect(jobId).to.not.be.null;
     log.info(`Job ID: ${jobId}`);
 
-    return glintManager.waitForJob(jobId).then((results) => {
+    glintManager.waitForJob(jobId).then((results) => {
       console.timeEnd('glint-job');
       log.info(`Job passed, result size: ${results.length}`);
       log.debug('Job results: ', results);

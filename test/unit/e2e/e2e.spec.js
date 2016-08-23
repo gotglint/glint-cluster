@@ -8,7 +8,7 @@ const log = require('../../../src/util/log').getLogger('engine.spec');
 const GlintManager = require('../../../src/engine/manager');
 const SlaveListener = require('../../../src/listener/slave-listener');
 
-describe('e2e test', function() {
+describe('e2e tests', function() {
   chai.use(chaiAsPromised);
   chai.should();
 
@@ -33,7 +33,7 @@ describe('e2e test', function() {
   after(function() {
     log.info('Cleaning up after test.');
 
-    return [glintManager.shutdown(), glintSlave1.shutdown(), glintSlave2.shutdown()];
+    return [glintManager.shutdown(), glintSlave1.shutdown(), glintSlave2.shutdown(), pause];
   });
 
   it('runs a simple map operation via the client', function(done) {
