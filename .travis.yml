@@ -29,6 +29,7 @@ before_script:
   - npm install -g gulp node-gyp
 
 script:
+  - npm install gotglint/glint-client
   - gulp ci
 
 after_success:
