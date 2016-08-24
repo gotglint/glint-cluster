@@ -103,13 +103,21 @@ class WebSocketServer {
     }
 
     log.debug('Shutting down WS server.');
+
     return new Promise((resolve) => {
-      this[_primus].destroy({timeout: 500}, () => {
-        log.debug('WS server destroyed.');
+      this[_primus].on('destroy', () => {
+        log.debug('WS server shutdown.');
         this[_connected] = false;
 
         resolve();
       });
+
+      for (let [clientId, spark] of this[_clients]) {
+        log.debug(`Closing connection to ${clientId}`);
+        spark.end();
+      }
+
+      this[_primus].destroy();
     });
   }
 }
