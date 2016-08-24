@@ -40,11 +40,11 @@ describe('two step job engine test', function() {
     const input = [...new Array(5).keys()].slice(1);
 
     const gc = new GlintClient();
-    const data = gc.parallelize(input).map((el) => {
+    const data = gc.parallelize(input).map(function(el) {
       return el + 324;
-    }).filter((el, idx) => {
+    }).filter(function(el, idx) {
       return !!(el === 325 || idx === 2);
-    }).reduce((a, b) => {
+    }).reduce(function(a, b) {
       console.log(`Reducing: ${a} :: ${b}`);
       return a + b;
     }, 'zzz').getData();
@@ -58,7 +58,7 @@ describe('two step job engine test', function() {
     glintManager.waitForJob(jobId).then((results) => {
       log.info('Job passed.');
       log.debug('Job results: ', results);
-      expect(results).to.eql(['zzz325327']);
+      expect(results).to.eql('zzz325327');
       done();
     }).catch((err) => {
       done(err ? err : new Error());
@@ -73,11 +73,11 @@ describe('two step job engine test', function() {
     const input = [...new Array(5).keys()].slice(1);
 
     const gc = new GlintClient();
-    const data = gc.parallelize(input).map((el) => {
+    const data = gc.parallelize(input).map(function(el) {
       return el + 324;
-    }).filter((el, idx) => {
+    }).filter(function(el, idx) {
       return !!(el === 325 || idx === 2);
-    }).reduce((a, b) => {
+    }).reduce(function(a, b) {
       console.log(`Reducing: ${a} :: ${b}`);
       return a + b;
     }, 0).getData();
@@ -91,7 +91,7 @@ describe('two step job engine test', function() {
     glintManager.waitForJob(jobId).then((results) => {
       log.info('Job passed.');
       log.debug('Job results: ', results);
-      expect(results).to.eql([652]);
+      expect(results).to.eql(652);
       done();
     }).catch((err) => {
       done(err ? err : new Error());
