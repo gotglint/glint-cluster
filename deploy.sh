@@ -2,6 +2,9 @@
 
 export PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
 
+echo "Deploying Glint Cluster ${PACKAGE_VERSION} to npm"
+npm publish
+
 echo "Building Glint Master ${PACKAGE_VERSION}"
 docker build -f Dockerfile.master -t quay.io/glint/glint-cluster-master:$PACKAGE_VERSION .
 
