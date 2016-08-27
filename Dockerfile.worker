@@ -1,0 +1,19 @@
+FROM mhart/alpine-node:6.4
+
+MAINTAINER Michael Laccetti <michael@laccetti.com> (https://laccetti.com/)
+
+RUN apk add --no-cache build-base git python
+
+ENV MASTER_HOST_IP=127.0.0.1
+ENV MASTER_PORT=45468
+ENV MAX_MEM=1024
+
+WORKDIR /opt/glint-cluster
+
+ADD . .
+
+RUN npm install -g gulp node-gyp
+RUN npm install
+RUN gulp dist
+
+CMD ./run -s $MASTER_HOST_IP:$MASTER_PORT -M $MAX_MEM

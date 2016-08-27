@@ -1,0 +1,22 @@
+version: '2'
+services:
+  master:
+    image: glint/glint-cluster-master:0.0.1
+    ports:
+     - "45468:45468"
+  worker1:
+    image: glint/glint-cluster-worker:0.0.1
+    environment:
+      - MASTER_HOST_IP=master
+    links:
+      - master
+    depends_on:
+      - master
+  worker2:
+    image: glint/glint-cluster-worker:0.0.1
+    environment:
+      - MASTER_HOST_IP=master
+    links:
+      - master
+    depends_on:
+      - master
