@@ -29,7 +29,7 @@
     "glint": "run"
   },
   "dependencies": {
-    "@gotglint/glint-client": "0.0.3",
+    "@gotglint/glint-client": "0.0.5",
     "binary-pack": "1.0.2",
     "bluebird": "3.4.3",
     "bufferutil": "1.2.1",
@@ -43,7 +43,8 @@
     "primus": "6.0.2",
     "statsd-client": "0.2.2",
     "utf-8-validate": "1.2.1",
-    "uws": "^0.8.0"
+    "uws": "0.8.0",
+    "ws": "1.1.1"
   },
   "devDependencies": {
     "chai": "3.5.0",

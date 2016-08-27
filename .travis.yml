@@ -35,6 +35,8 @@ before_script:
   - npm install -g gulp node-gyp codecov mr-doc
 
 script:
+  - npm install
+  - npm update
   - gulp ci
 
 after_success:
