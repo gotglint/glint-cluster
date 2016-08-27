@@ -25,12 +25,19 @@ program.on('--help', function(){
 program.parse(process.argv);
 
 if (program.slave) {
+  const split = program.slave.split(':');
+  if (split.length !== 2) {
+    log.warn('%s is not a valid option for the master host; should be in the format host:port.', program.slave);
+    process.exit(1);
+  }
+
   const slaveOptions = {
-    masterHost: program.slave,
+    masterHost: split[0],
+    masterPort: split[1],
     maxMem: program.maxmem
   };
 
-  log.info('Initializing slave, connecting to master: %s', program.slave);
+  log.info('Initializing slave, connecting to master host: %s', program.slave);
   slave(slaveOptions);
 } else {
   const split = program.master.split(':');
