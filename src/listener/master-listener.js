@@ -2,6 +2,7 @@ const _ = require('lodash');
 
 const log = require('../util/log').getLogger('master');
 const WebSocketServer = require('../net/ws-server');
+const sdc = require('../util/statsd-client');
 
 const _host = Symbol('host');
 const _port = Symbol('port');
@@ -44,21 +45,24 @@ class MasterListener {
     this[_manager] = manager;
   }
 
-  handleMessage(sparkId, message) {
+  handleMessage(clientId, message) {
+    sdc.increment(`glint.master.${clientId}.received`);
+    sdc.increment(`glint.master.messages.received`);
+
     if (message) {
       if (message.type === 'online') {
-        log.debug(`Client connected: ${sparkId}`);
-        this[_clients].push({sparkId: sparkId, maxMem: message.data.maxMem, free: true});
+        log.debug(`Client connected: ${clientId}`);
+        this[_clients].push({sparkId: clientId, maxMem: message.data.maxMem, free: true});
       } else if (message.type === 'job-request') {
         log.debug('Received a job request from a client, adding to the queue.');
         const jobId = this[_manager].processJob(message);
-        this.sendMessage(sparkId, {type: 'job-response', jobId: jobId});
+        this.sendMessage(clientId, {type: 'job-response', jobId: jobId});
 
         this[_pendingJobs].set(jobId, new Promise(() => {
           log.debug(`Tracking pending job ${jobId}.`);
           this[_manager].waitForJob(jobId).then((result) => {
             log.debug('Job complete - sending message back to requesting client.');
-            this.sendMessage(sparkId, {type: 'job-complete', data: result});
+            this.sendMessage(clientId, {type: 'job-complete', data: result});
             this[_pendingJobs].delete(jobId);
           });
         }));
@@ -101,6 +105,9 @@ class MasterListener {
   }
 
   sendMessage(clientId, message) {
+    sdc.increment(`glint.master.${clientId}.sent`);
+    sdc.increment(`glint.master.messages.sent`);
+
     log.debug('Master sending message to slave.');
     log.verbose('Master listener sending message: ', message);
     return this[_wss].sendMessage(clientId, message);

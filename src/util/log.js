@@ -7,7 +7,7 @@ intel.basicConfig({
   }
 });
 
-intel.setLevel(intel.DEBUG);
+intel.setLevel(intel.INFO);
 intel.info('Logging configured.');
 
 module.exports = intel;

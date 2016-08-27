@@ -1,5 +1,6 @@
 const log = require('../util/log').getLogger('slave');
 const WebSocketClient = require('../net/ws-client');
+const sdc = require('../util/statsd-client');
 
 const _host = Symbol('host');
 const _port = Symbol('port');
@@ -37,6 +38,7 @@ class SlaveListener {
   }
 
   handleMessage(message) {
+    sdc.increment(`glint.slave.messages.received`);
     log.debug('Slave listener handling message.');
     log.verbose('Message: ', message);
 
@@ -82,6 +84,7 @@ class SlaveListener {
 
   sendMessage(type, message) {
     log.debug('Slave listener sending message.');
+    sdc.increment(`glint.slave.messages.sent`);
     return this[_ws].sendMessage({type: type, data: message});
   }
 

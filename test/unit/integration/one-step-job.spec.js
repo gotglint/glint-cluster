@@ -37,13 +37,14 @@ describe('One step job tests', function() {
 
     log.info('Beginning test.');
 
-    const input = [...new Array(5).keys()].slice(1);
+    const input = [...new Array(6).keys()].slice(1);
+    log.debug(`Input: ${input}`);
 
     const gc = new GlintClient();
     const data = gc.parallelize(input).map(function(el) {
       return el + 324;
-    }).filter(function(el, idx) {
-      return !!(el === 325 || idx === 2);
+    }).filter(function(el) {
+      return el % 2 == 0;
     }).getData();
 
     log.info('Job data composed, submitting for processing.');
@@ -56,7 +57,7 @@ describe('One step job tests', function() {
       log.info('Job passed.');
       log.debug('Job results: ', results);
       expect(results).to.have.lengthOf(2);
-      expect(results).to.eql([325, 327]);
+      expect(results).to.eql([326, 328]);
       done();
     }).catch((err) => {
       done(err ? err : new Error());
@@ -68,13 +69,13 @@ describe('One step job tests', function() {
 
     log.info('Beginning test.');
 
-    const input = [...new Array(10000001).keys()].slice(1);
+    const input = [...new Array(5000001).keys()].slice(1);
 
     const gc = new GlintClient();
     const data = gc.parallelize(input).map(function(el) {
       return el + 324;
     }).filter(function(el) {
-      return el % 137 === 0;
+      return el % 1337 === 0;
     }).getData();
 
     log.info('Job data composed, submitting for processing.');
@@ -87,7 +88,7 @@ describe('One step job tests', function() {
     glintManager.waitForJob(jobId).then((results) => {
       console.timeEnd('glint-job');
       log.info(`Job passed, result size: ${results.length}`);
-      log.debug('Job results: ', results);
+      log.verbose('Job results: ', results);
       done();
     }).catch((err) => {
       done(err ? err : new Error());

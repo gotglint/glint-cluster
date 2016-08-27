@@ -41,7 +41,7 @@
     "node-uuid": "1.4.7",
     "object-sizeof": "^1.1.0",
     "primus": "6.0.2",
-    "statsd-client": "0.2.2",
+    "statsd-client": "^0.2.2",
     "utf-8-validate": "1.2.1",
     "uws": "0.8.0",
     "ws": "1.1.1"
