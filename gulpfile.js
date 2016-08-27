@@ -88,11 +88,11 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', (callback) => {
-  runSequence('clean', 'build', callback);
+  runSequence('clean', 'test', callback);
 });
 
 gulp.task('ci', (callback) => {
   runSequence('clean', 'build', 'test:coverage', callback);
 });
 
-gulp.task('dist', ['test']);
+gulp.task('dist', ['lint']);
