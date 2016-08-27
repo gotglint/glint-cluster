@@ -1,5 +1,4 @@
 require('colors');
-const fs = require('fs');
 const program = require('commander');
 
 const master = require('./master');
@@ -7,7 +6,8 @@ const slave = require('./slave');
 
 const log = require('./util/log');
 
-const meta = JSON.parse(fs.readFileSync('./package.json'));
+// package info
+const meta = require('../package.json');
 
 program
   .version(meta.version);
