@@ -26,7 +26,7 @@ addons:
     - g++-4.8
 
 before_script:
-  - npm install -g gulp node-gyp
+  - npm install -g gulp node-gyp codecov mr-doc
 
 script:
   - npm install gotglint/glint-client

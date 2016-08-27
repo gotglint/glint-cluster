@@ -12,3 +12,4 @@ coverage
 npm-debug.log
 isolate*.log
 processed.txt
+docs
