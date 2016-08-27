@@ -50,17 +50,9 @@ class GlintJob {
     return this[_jobData].operations;
   }
 
-  /**
-   * Used to take a wild guess at how big the data will in memory;
-   * used to calculate the scaling heuristic by acting as a baseline.
-   */
-  getProjectedSize() {
-    return this[_dataSource].getSize();
-  }
-
-  _createBlock(block, step) {
+  _createBlock(block, blockSize, step) {
     const newBlockId = uuid.v4();
-    const fullBlock = {blockId: newBlockId, type: 'job', jobId: this[_id], block: block, operations: this[_steps][step], step: step};
+    const fullBlock = { type: 'job', jobId: this[_id], blockId: newBlockId, blockSize:blockSize, block: block, operations: this[_steps][step], step: step};
     this[_blocks].set(newBlockId, fullBlock);
     return fullBlock;
   }
@@ -68,26 +60,25 @@ class GlintJob {
   /**
    * Act as a pointer to the specific place in the dataset
    */
-  getNextBlock(maxMem) {
-    log.debug(`Getting next block with max size ${maxMem}`);
+  getNextBlock(blockSizePercentage, clientMaxMem) {
+    const desiredBlockSize = clientMaxMem * (blockSizePercentage/100);
+    log.debug(`Getting next block with max size ${blockSizePercentage}% of ${clientMaxMem} - ${desiredBlockSize}`);
 
     if (this[_dataSource].hasNextBlock()) {
       log.debug('Consuming block from data source.');
-      let block = this[_dataSource].getNextBlock(maxMem);
+
+      let block = this[_dataSource].getNextBlock(desiredBlockSize);
       block = block.filter((e) => {
         return e === 0 || e;
       });
-      return this._createBlock(block, 0);
+      return this._createBlock(block, blockSizePercentage, 0);
     } else if (this[_stepResults].length > 0) {
       log.debug('Consuming block from prior step.');
-      return this._createBlock(this._getStepBlock(maxMem), 1);
+      return this._createBlock(this._getStepBlock(desiredBlockSize), blockSizePercentage, 1);
     }
   }
 
-  _getStepBlock(maxMem) {
-    const results = this[_stepResults];
-    log.debug('Results: ', results);
-    const blockSize = maxMem / sizeof(results[0]); // the (1)[0] is a dirty hack based on us only allowing one reduction
+  _getStepBlock(blockSize) {
     const block = [];
 
     while (sizeof(block) < blockSize) {
@@ -185,6 +176,7 @@ class GlintJob {
   }
 
   isProcessing() {
+    log.debug(`Are we still processing blocks: ${this[_blocks].size}; step results: ${this[_stepResults].length}`);
     return this[_blocks].size > 0 || this[_stepResults].length > 0;
   }
 

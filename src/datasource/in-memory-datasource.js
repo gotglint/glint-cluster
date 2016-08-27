@@ -36,15 +36,19 @@ class InMemoryDatasource extends Datasource {
     // something
   }
 
-  getNextBlock(maxMem) {
-    const blockSize = maxMem / this[_rowSize];
+  getNextBlock(desiredBlockSize) {
     const block = [];
 
-    while (sizeof(block) < blockSize) {
+    let currentSize = 0;
+
+    while (currentSize < desiredBlockSize / 1.3) {
+      // log.debug(`Current size: ${currentSize} - row size: ${this[_rowSize]} - desired block size: ${desiredBlockSize}`);
       block.push(this.data[this[_pointer]]);
       this[_pointer] = this[_pointer] + 1;
+      currentSize += this[_rowSize];
     }
 
+    log.debug(`Created block with size ${sizeof(block)} out of desired size ${desiredBlockSize}`);
     return block;
   }
 

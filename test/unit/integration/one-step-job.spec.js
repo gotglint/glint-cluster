@@ -11,8 +11,8 @@ describe('One step job tests', function() {
   const expect = chai.expect;
 
   const glintManager = new GlintManager('localhost', 45468);
-  const glintSlave1 = new SlaveListener('localhost', 45468, 125000);
-  const glintSlave2 = new SlaveListener('localhost', 45468, 125000);
+  const glintSlave1 = new SlaveListener('localhost', 45468, 10000000);
+  const glintSlave2 = new SlaveListener('localhost', 45468, 10000000);
 
   const pause = new Promise((resolve) => {
     setTimeout(() => {log.info('Waiting...'); resolve();}, 2500);
@@ -64,11 +64,11 @@ describe('One step job tests', function() {
   });
 
   it('runs a big map operation', function(done) {
-    this.timeout(60000);
+    this.timeout(120000);
 
     log.info('Beginning test.');
 
-    const input = [...new Array(50001).keys()].slice(1);
+    const input = [...new Array(10000001).keys()].slice(1);
 
     const gc = new GlintClient();
     const data = gc.parallelize(input).map(function(el) {

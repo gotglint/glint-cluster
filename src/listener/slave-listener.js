@@ -41,6 +41,8 @@ class SlaveListener {
     log.verbose('Message: ', message);
 
     if (message && message.type && message.type === 'job') {
+      const memBefore = process.memoryUsage();
+
       let block = message.block;
 
       const operations = message.operations;
@@ -69,9 +71,12 @@ class SlaveListener {
         }
       }
 
-      log.debug('Sending response back to master.');
+      const memAfter = process.memoryUsage();
+      const totalMemoryUsed = memAfter.heapUsed - memBefore.heapUsed;
+
+      log.debug(`Message processed, utilized ${totalMemoryUsed}, sending response back to master.`);
       log.verbose('Response message: ', block);
-      this.sendMessage('block-response', {clientId: this[_ws].id, blockId: message.blockId, block:block, jobId: message.jobId, step: message.step});
+      this.sendMessage('block-response', {clientId: this[_ws].id, blockId: message.blockId, blockSize: message.blockSize, block:block, jobId: message.jobId, step: message.step, memoryUsed: totalMemoryUsed});
     }
   }
 
