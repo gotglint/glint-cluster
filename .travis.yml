@@ -36,9 +36,9 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 deploy:
-  on:
-    tags: true
   provider: npm
   email: michael@laccetti.com
   api_key:
     secure: C1yccYo1LKUy6RPaTdsio8kw5W9igcF8LACyfeBzt2vWv6tKt8NnNYVH/wVX4VVfq2gNcGv/xPlxFWHacblwG+yaiK0SaBL7A+xGO9wHZ1gZX/u3kRKc8dZqX0skvOufrAeUAYy35fxPs1u8GnSUSmrKe4x8ShvTt1gqTKCMWyBnnC9NKGcc+MK2rRmkxNSEUqHYy0PjVAQ5hv5Cj95jeruTAvH4OljQC6pDSOUccZ0/w7ggDDTQZkv37aYPp0RTxwqnA6yfxp6yGPoqCoffwPm0r3O4R1N/yPqh7lyqry7uf+6pICAe/bqq0G/ANAm06HP8CDJyRYQOhd/nlG9fpfktUj9lSqLJWy9s3fzoJ23pSFRFGjQdZyLy2X7tvJycPoZJn8dd2C2tEmTVbD699Hhf+/zN5bW87MzftUyvKI1r/lfk0CKSEQ7A4i1pn3f0AwVJ39Pgv+RbDvZh5h38DVWUI+DUBgSP0kndJYNjtXbjlmrx3EvoZ+R0X95PagJmYoIUOe1K0yWLlrJrKNFwqqTW/w6Hl0M69FtDR1XkePWuWnxK1ns0CvgjaGx+vA4u9SqtYpavxvnMVKf4gzTUAisYuXfTWOcuwkTMFnAMPhcjfx0Qfg+leeyto7xCZntTcWV6iDYOSDK9kjr7+X7txmUFG5fertRsnuAiYcUoRk8=
+  on:
+    tags: true
