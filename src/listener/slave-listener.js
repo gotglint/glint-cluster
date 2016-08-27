@@ -38,7 +38,7 @@ class SlaveListener {
   }
 
   handleMessage(message) {
-    sdc.increment(`glint.slave.messages.received`);
+    sdc.increment('glint.slave.messages.received');
     log.debug('Slave listener handling message.');
     log.verbose('Message: ', message);
 
@@ -84,7 +84,7 @@ class SlaveListener {
 
   sendMessage(type, message) {
     log.debug('Slave listener sending message.');
-    sdc.increment(`glint.slave.messages.sent`);
+    sdc.increment('glint.slave.messages.sent');
     return this[_ws].sendMessage({type: type, data: message});
   }
 

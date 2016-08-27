@@ -119,7 +119,7 @@ class GlintExecutor {
   }
 
   handleMessage(message) {
-    log.debug(`Processing block completion.`);
+    log.debug('Processing block completion.');
     this[_emitter].emit('block:completed', message);
   }
 
@@ -144,10 +144,10 @@ class GlintExecutor {
       const clientBlocks = this[_blockTracker].get(clientId);
       const lastClientBlock = clientBlocks.slice(-1)[0];
 
-      const freeMemory = ((clientMemoryUsage - lastClientBlock.memoryUsed) / clientMemoryUsage) * 100;
+      const freeMemory = clientMemoryUsage - lastClientBlock.memoryUsed / clientMemoryUsage * 100;
       log.debug(`Client ${clientId} last used ${lastClientBlock.memoryUsed} for a block of size ${lastClientBlock.blockSize}, and had ${freeMemory} memory left.`);
       if (freeMemory > 20) {
-        const blockSize = lastClientBlock.blockSize + (freeMemory * 0.1);
+        const blockSize = lastClientBlock.blockSize + freeMemory * 0.1;
         log.debug(`Last block left ${freeMemory}% of the memory free, bumping up block size to ${blockSize}.`);
         return blockSize;
       } else {

@@ -44,7 +44,7 @@ describe('One step job tests', function() {
     const data = gc.parallelize(input).map(function(el) {
       return el + 324;
     }).filter(function(el) {
-      return el % 2 == 0;
+      return el % 2 === 0;
     }).getData();
 
     log.info('Job data composed, submitting for processing.');

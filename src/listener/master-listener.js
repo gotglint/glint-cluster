@@ -47,7 +47,7 @@ class MasterListener {
 
   handleMessage(clientId, message) {
     sdc.increment(`glint.master.${clientId}.received`);
-    sdc.increment(`glint.master.messages.received`);
+    sdc.increment('glint.master.messages.received');
 
     if (message) {
       if (message.type === 'online') {
@@ -106,7 +106,7 @@ class MasterListener {
 
   sendMessage(clientId, message) {
     sdc.increment(`glint.master.${clientId}.sent`);
-    sdc.increment(`glint.master.messages.sent`);
+    sdc.increment('glint.master.messages.sent');
 
     log.debug('Master sending message to slave.');
     log.verbose('Master listener sending message: ', message);
