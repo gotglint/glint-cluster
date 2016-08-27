@@ -1,4 +1,5 @@
 version: '2'
+
 services:
   master:
     image: glint/glint-cluster-master:0.0.1
