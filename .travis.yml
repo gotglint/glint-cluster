@@ -35,7 +35,6 @@ before_script:
   - npm install -g gulp node-gyp codecov mr-doc
 
 script:
-  - npm install gotglint/glint-client
   - gulp ci
 
 after_success:
