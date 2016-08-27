@@ -13,3 +13,4 @@ npm-debug.log
 isolate*.log
 processed.txt
 docs
+gotglint-glint-cluster-*.tgz
