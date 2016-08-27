@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/gotglint/glint-cluster/issues"
   },
-  "license": "GPL-3",
+  "license": "GPL-3.0",
   "scripts": {
     "build": "$(which gulp)",
     "watch": "$(which gulp) watch",
@@ -43,7 +43,7 @@
     "primus": "6.0.2",
     "statsd-client": "0.2.2",
     "utf-8-validate": "1.2.1",
-    "ws": "1.1.1"
+    "uws": "^0.8.0"
   },
   "devDependencies": {
     "chai": "3.5.0",

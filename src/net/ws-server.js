@@ -33,7 +33,7 @@ class WebSocketServer {
       this[_primus] = Primus.createServer({
         hostname:           this[_host],
         port:               this[_port],
-        transformer:        'websockets',
+        transformer:        'uws',
         iknowhttpsisbetter: true,
         parser:             'binary'
       });

@@ -34,7 +34,7 @@ class WebSocketClient {
       const wsServer = `http://${this[_host]}:${this[_port]}`;
       log.debug(`Connecting to ${wsServer}`);
 
-      const Socket = Primus.createSocket({transformer: 'websockets', parser: 'binary'});
+      const Socket = Primus.createSocket({transformer: 'uws', parser: 'binary'});
       this[_client] = new Socket(wsServer);
 
       this[_client].on('data', (data) => {
