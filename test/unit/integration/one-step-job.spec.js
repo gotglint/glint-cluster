@@ -69,7 +69,7 @@ describe('One step job tests', function() {
 
     log.info('Beginning test.');
 
-    const input = [...new Array(5000001).keys()].slice(1);
+    const input = [...new Array(50001).keys()].slice(1);
 
     const gc = new GlintClient();
     const data = gc.parallelize(input).map(function(el) {
