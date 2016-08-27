@@ -14,7 +14,7 @@ env:
     - DOCKER_EMAIL=michael@laccetti.com
     - DOCKER_USERNAME=mlaccetti
     - secure: "hvK1mfw70HbQTzJrnoXpfVxXZhAx/Dl/wkskQGW/vLq1Jri3pl4oU4+7KK4QLvKJEPoZG/SM/FMquKEF2vbEip0v4JRAoQ+z8oUvCqfjFqkEPAmr9JYQ++9m7oykUeurQb4Px2rvqGRi1LKi4koglZh43K763ET+YZxuRxyH7AU0BVBRzYHMqnoWoNDQr/9VVyKQ6o52ej7wKUn3/6HgOqCXIQjXQytZhxhmnB5SoEN/VZaTOixaa7raeThslndFn+pkJo5hhKdlrpRtdj6a7QrBTjJjJzp8HDDcyWMsX+uXjEA8JPEYOtYXQyAC0gz6jIuMo+7JzHIhc0IsGx64Ln+9Qrc19Xj5S3wjqJUwu/zGH0CgTh8TyhQz6kWachbkssh00QlegNWLQz923D6oD7fsMhBr5EStR1t477H01nfAbpvDaiIk/ctjON5xFg4L/FGwLTcYFBNjDFiiEoEVY2biKnV/mmcT4U3i8nv+nk7i3wQu2F0bJxayRueVKy7ubjffmzxoDnYmkVOzh0aHo8VTvkBZzq33Rh+gYWW4bNudPaAmgov4sPIadO6wBqSsrQ3HliT/wY8pTgkNaFrMtI2JYEzvBoeaGnZQhBki1tKu7qiTOwQxf7KvmbQP9WNegWb9mCwh2sr2pmnbHYVmUQFz40HiCGlgtJ0h1IznfCQ="
-    - secure: "JS0xd+JgYX9WtF7CnHsiPifRlGbRAw5qKs8pbQLtakCida9xwdYEdWQoRHolKjnY8PIGOcmdKVuEn3ehDuotmhIQet5obUK1O483JW+QMfSFSE6TI4/Bpr+yjZAbUqqaxsQAUVA2DtY87m3Jt9tbKuqWSnHttYJGf5BKIFsVfzQ2PAIEBPRA2LXub0AlNYVIXxfmaLs4bmGSs5UlrfZzhM2gqK8AjEL3UMhCvEMcXyFN+w2e3zH4cW0kQkgkHJy4MzRJihY0h2uT9zndZS55J2eOOzwMldKsgXEuV5q4yZpM9j06NwRZ/MuF4LFXu18mALRV1yIhgD3Hy6+gIeNcPVM9wg7uOp0UqULG6Hj8/mFzkKaCWiGIGxBG2o1HGYSpjl/agsw3tc0icuX/nedPTTSQuh4F0RSyXN8T7WgjE6D+VsM8H9y2JgtdMlAnNUXIMFv/Bf8qHTMXsGt4odhrfd/Lm2Lojgfm5PxHcSxvmAqkROyrg3kSMWClHcGbCpO9IhNYGkDfnFngyUt4Bl4Q7mnNaNK4bw4iICnwF1385jbhEpB+FiDpJ/Awgfeeevj+cwQ8m3mUViHp7v5oQ86Eq9EAvktWJpyEQmb6EMmzaLmhiAv0huLvxL5+wIWBn169759vBJYrtSzLqGhrFmTloLrauw8BSiM8S1x3Qrc9B3I="
+    - secure: "TapEIw05F0sJt1mIRHDXqNMVToXFTiJVu1aecZsfYOtNnqK2bL9M4YjL/QF7k2gJK7MmR0zE4M4uyzyDzEyJRdglY/XvbVMekNnnn6QHM9cXsaN03eLE5q2rg4w4HD2dPkC67W4vUmEubCQ8jcBbqiVLky765QetYCtlCjgayG7pzxQwz5s7BAQutcBjU2GezBo5x5uLrTNb0GIZVktgiro9A+UxfUb2+HqsOyOynGhSE4ZzwitAzaZvLhx3jRrYNRq2s36x1b1ULg+R4Dv+lu5wBGUPGM8EB7mYPuY+Vcdge1ew2/F81sp/qpFLxB522geuwaBSzx/BdiKy2A/i7xBaVUkxjNYGwk1nYuHZ/sSbZnKYLLMVYb5RZsQYWJubO9YgiY3hlBZvnRj6ShtNk13TnHA6+P6Y3ySCmypL75uaknSYjiY8eAVIa89Ol1CnWURrR9r7KyLFScRwnsittZELNVsTLRQkHg80MjFpkre4ayOp0pMsEzvXblbyQglWzzXmiCkby6oVNc3hkVg+3em1E2RxqdD2m9mG0vbcDNx2w7QsyH00Hq2OOODnbvF4QU5xnt5Y0yQ5Mvgj6hRGpZGMDIJCzPShSZqjqF5XzjnRyzGLReR7Yit99esQzb1q1fJVMGfwvCE3E1dqzJnxa9WrCqRGCBBxJp2zFm0Whfs="
   matrix:
     - NODE_ENV=development
 
@@ -45,8 +45,8 @@ after_success:
 
 before_deploy:
   - docker login quay.io -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - echo "@gotglint:registry=https://registry.npmjs.org/" >> .npmrc
-  - echo "//registry.npmjs.org/:_authToken=$NODE_TOKEN" >> .npmrc
+  - npm config set "@gotglint:registry" "https://registry.npmjs.org/"
+  - npm config set "//registry.npmjs.org/:_authToken" $NPM_TOKEN
 
 deploy:
   provider: script
