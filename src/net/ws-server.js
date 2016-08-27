@@ -65,6 +65,7 @@ class WebSocketServer {
         log.debug('WS server error: ', err);
       });
 
+      log.debug('WS server has initialized, is now listening for clients.');
       this[_connected] = true;
       resolve();
     });
