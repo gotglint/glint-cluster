@@ -10,7 +10,7 @@ const GlintManager = require('./engine/manager');
  * @returns {Promise} A promise to wait on
  */
 function initMaster(options) {
-  log.debug('Kicking off the master - binding to [ %d:%d ]', options.masterHost, options.masterPort);
+  log.debug('Kicking off the master - binding to [ %s:%d ]', options.masterHost, options.masterPort);
 
   log.debug('Instantiating Glint manager.');
   const glintManager = new GlintManager(options.masterHost, options.masterPort);
