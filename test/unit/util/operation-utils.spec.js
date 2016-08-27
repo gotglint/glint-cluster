@@ -3,7 +3,7 @@ const operationUtils = require('../../../src/util/operation-utils');
 
 const chai = require('chai');
 
-const GlintClient = require('glint-client');
+const GlintClient = require('@gotglint/glint-client');
 
 describe('Test operation utilities', function() {
   const expect = chai.expect;

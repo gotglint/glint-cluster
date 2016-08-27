@@ -1,6 +1,6 @@
 const chai = require('chai');
 
-const GlintClient = require('glint-client');
+const GlintClient = require('@gotglint/glint-client');
 
 const log = require('../../../src/util/log').getLogger('engine.spec');
 
