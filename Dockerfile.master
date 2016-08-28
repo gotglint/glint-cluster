@@ -1,8 +1,6 @@
-FROM mhart/alpine-node:6.4
+FROM node:6.4
 
 MAINTAINER Michael Laccetti <michael@laccetti.com> (https://laccetti.com/)
-
-RUN apk add --no-cache build-base git python
 
 ENV MASTER_IP=0.0.0.0
 ENV MASTER_PORT=45468

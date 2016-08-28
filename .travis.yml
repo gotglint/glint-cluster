@@ -20,8 +20,6 @@ env:
 
 cache:
   - apt: true
-  - directories:
-    - node_modules
 
 addons:
   apt:
@@ -33,6 +31,7 @@ addons:
     - g++-4.8
 
 before_script:
+  - rm -fr node_modules
   - npm install -g gulp node-gyp codecov mr-doc
 
 script:

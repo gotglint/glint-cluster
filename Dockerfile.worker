@@ -16,4 +16,4 @@ RUN npm install -g gulp node-gyp
 RUN npm install
 RUN gulp dist
 
-CMD ./run -s $MASTER_HOST_IP:$MASTER_PORT -M $MAX_MEM
+CMD ./run -w $MASTER_HOST_IP:$MASTER_PORT -M $MAX_MEM
