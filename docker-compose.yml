@@ -2,11 +2,11 @@ version: '2'
 
 services:
   master:
-    image: glint/glint-cluster-master:0.0.1
+    image: quay.io/glint/glint-cluster-master:latest
     ports:
      - "45468:45468"
   worker1:
-    image: glint/glint-cluster-worker:0.0.1
+    image: quay.io/glint/glint-cluster-worker:latest
     environment:
       - MASTER_HOST_IP=master
     links:
@@ -14,7 +14,7 @@ services:
     depends_on:
       - master
   worker2:
-    image: glint/glint-cluster-worker:0.0.1
+    image: quay.io/glint/glint-cluster-worker:latest
     environment:
       - MASTER_HOST_IP=master
     links:
