@@ -14,7 +14,7 @@ program
 
 program
   .option('-m, --master <master>', 'Override the IP/port that the master will listen on; defaults to localhost:45468.', 'localhost:45468')
-  .option('-s, --slave <master>', 'Run as a slave; provide the IP/port of the master node (mandatory).')
+  .option('-w, --worker <master>', 'Run as a worker; provide the IP/port of the master node (mandatory).')
   .option('-M --maxmem <mem>', 'Specify the amount of memory (in MB) for the slave to use (mandatory - defaults to 1024).', parseInt, 1024);
 
 program.on('--help', function(){
@@ -24,10 +24,10 @@ program.on('--help', function(){
 
 program.parse(process.argv);
 
-if (program.slave) {
-  const split = program.slave.split(':');
+if (program.worker) {
+  const split = program.worker.split(':');
   if (split.length !== 2) {
-    log.warn('%s is not a valid option for the master host; should be in the format host:port.', program.slave);
+    log.warn('%s is not a valid option for the master host; should be in the format host:port.', program.worker);
     process.exit(1);
   }
 
@@ -37,8 +37,13 @@ if (program.slave) {
     maxMem: program.maxmem
   };
 
-  log.info('Initializing slave, connecting to master host: %s', program.slave);
-  slave(slaveOptions);
+  log.info('Initializing worker, connecting to master host: %s', program.worker);
+  slave(slaveOptions).then(() => {
+    log.info('Worker has been initialized and connected to the master.');
+  }).catch((err) => {
+    log.error(`Worker failed to initialize: ${err.message ? err.message : 'An unknown error occurred'}`);
+    process.exit(1);
+  });
 } else {
   const split = program.master.split(':');
   if (split.length !== 2) {
@@ -52,6 +57,11 @@ if (program.slave) {
   };
 
   log.info('Initializing new master [ binding to %s ]', program.master);
-  master(masterOptions);
+  master(masterOptions).then(() => {
+    log.info('Master has been initialized, waiting for workers to connect.');
+  }).catch((err) => {
+    log.error(`Master failed to initialize: ${err.message ? err.message : 'An unknown error occurred'}`);
+    process.exit(1);
+  });
 }
 
