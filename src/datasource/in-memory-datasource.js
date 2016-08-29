@@ -46,6 +46,11 @@ class InMemoryDatasource extends Datasource {
       block.push(this.data[this[_pointer]]);
       this[_pointer] = this[_pointer] + 1;
       currentSize += this[_rowSize];
+
+      if (this[_pointer] > this.data.length) {
+        log.debug('We have hit the end of the data, wrapping up block.');
+        break;
+      }
     }
 
     log.debug(`Created block with size ${sizeof(block)} out of desired size ${desiredBlockSize}`);

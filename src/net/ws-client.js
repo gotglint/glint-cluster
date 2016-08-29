@@ -14,6 +14,8 @@ const _connected = Symbol('connected');
 
 const _slave = Symbol('slave');
 
+const _chunks = Symbol('chunks');
+
 class WebSocketClient {
   constructor(host, port) {
     this[_id] = null;
@@ -25,6 +27,8 @@ class WebSocketClient {
     this[_connected] = false;
 
     this[_slave] = null;
+
+    this[_chunks] = new Map();
   }
 
   init() {
@@ -39,11 +43,37 @@ class WebSocketClient {
 
       this[_client].on('data', (data) => {
         log.verbose('WS client raw data: ', data);
-        const deserialized = JSONfn.parse(data);
-        log.verbose('WS client received a message: ', deserialized);
+        if (data && data.type) {
+          switch(data.type) {
+            case 'start':
+              log.debug('Starting a new chunk for ID ' + data.id);
+              this[_chunks].set(data.id, '');
+              break;
+            case 'chunk':
+              log.debug('Adding to an existing chunk for ID ' + data.id);
+              const newChunk = this[_chunks].get(data.id) + data.data;
+              this[_chunks].set(data.id, newChunk);
+              break;
+            case 'end':
+              const deserialized = JSONfn.parse(this[_chunks].get(data.id));
+              this[_chunks].delete(data.id);
+              log.debug('WS client rehydrated a stream of chunks.');
+              log.verbose('WS client received a message: ', deserialized);
 
-        if (this[_slave]) {
-          this[_slave].handleMessage(deserialized);
+              if (this[_slave]) {
+                this[_slave].handleMessage(deserialized);
+              }
+              break;
+            case 'fullChunk':
+              const fullChunkDeserialized = JSONfn.parse(data.data);
+              log.debug('WS client handled a full chunk.');
+              log.verbose('WS client received a message: ', fullChunkDeserialized);
+
+              if (this[_slave]) {
+                this[_slave].handleMessage(fullChunkDeserialized);
+              }
+              break;
+          }
         }
       });
 

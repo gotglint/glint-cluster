@@ -13,7 +13,7 @@ const _master = Symbol('master');
  */
 class GlintManager {
   constructor(host, port) {
-    log.debug('Master initializing; binding to %s:%d', host, port);
+    log.debug('Manager initializing; creating master and binding to %s:%d', host, port);
     this[_master] = new MasterListener(host, port);
     this[_master].registerManager(this);
 
@@ -27,7 +27,7 @@ class GlintManager {
    */
   init() {
     try {
-      log.debug('Master listener created, initializing.');
+      log.info('Master listener created, initializing Glint manager.');
       return this[_master].init();
     } catch (error) {
       log.error('Could not initialize master listener: ', error);
@@ -41,7 +41,7 @@ class GlintManager {
    * @returns {Promise} A promise to wait on
    */
   shutdown() {
-    log.debug('Glint manager shutting down.');
+    log.info('Glint manager shutting down.');
 
     return this[_master].shutdown();
   }
@@ -60,7 +60,7 @@ class GlintManager {
     glintExecutor.init();
 
     const jobId = glintExecutor.getId();
-    log.debug(`Processing job: ${jobId}`);
+    log.debug(`A new job has been submitted for processing, it has been assigned an ID of: ${jobId}`);
 
     this[_jobs].set(jobId, glintExecutor);
 

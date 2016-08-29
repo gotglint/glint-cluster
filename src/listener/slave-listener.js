@@ -9,11 +9,11 @@ const _ws = Symbol('ws');
 
 class SlaveListener {
   constructor(host, port, maxMem) {
-    log.debug(`Slave listener constructor firing, connecting to ${host}:${port} - using ${maxMem} as the memory limit`);
+    log.debug(`Worker listener constructor firing, connecting to ${host}:${port} - using ${maxMem} as the memory limit`);
 
     this[_host] = host;
     this[_port] = port;
-    this[_maxMem] = maxMem;
+    this[_maxMem] = maxMem * 1000 * 1000;
 
     this[_ws] = null;
   }
@@ -29,17 +29,17 @@ class SlaveListener {
     this[_ws].registerSlave(this);
 
     return this[_ws].init().then(() => {
-      log.debug('Slave listener created WS client.');
+      log.info('Worker listener established connection to master.');
       return this.sendMessage('online', {maxMem: this[_maxMem]});
     }).catch((err) => {
-      log.error(`Slave listener could not connect to WS server: ${err}`);
+      log.error(`Worker listener could not connect to WS server: ${err}`);
       return Promise.reject(err);
     });
   }
 
   handleMessage(message) {
     sdc.increment('glint.slave.messages.received');
-    log.debug('Slave listener handling message.');
+    log.info('Worker listener processing message from master.');
     log.verbose('Message: ', message);
 
     if (message && message.type && message.type === 'job') {
@@ -83,13 +83,13 @@ class SlaveListener {
   }
 
   sendMessage(type, message) {
-    log.debug('Slave listener sending message.');
+    log.info('Worker listener sending response back to master.');
     sdc.increment('glint.slave.messages.sent');
     return this[_ws].sendMessage({type: type, data: message});
   }
 
   shutdown() {
-    log.debug('Slave listener shutting down.');
+    log.info('Worker listener shutting down.');
     return this[_ws].shutdown();
   }
 }

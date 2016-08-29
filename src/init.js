@@ -15,7 +15,7 @@ program
 program
   .option('-m, --master <master>', 'Override the IP/port that the master will listen on; defaults to localhost:45468.', 'localhost:45468')
   .option('-w, --worker <master>', 'Run as a worker; provide the IP/port of the master node (mandatory).')
-  .option('-M --maxmem <mem>', 'Specify the amount of memory (in MB) for the slave to use (mandatory - defaults to 1024).', parseInt, 1024);
+  .option('-M --maxmem <mem>', 'Specify the amount of memory (in MB) for the slave to use (mandatory - defaults to 256mb).', parseInt, 256);
 
 program.on('--help', function(){
   console.log('  By default, this application will fire up a master instance.');

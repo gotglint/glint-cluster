@@ -1,6 +1,7 @@
 const JSONfn = require('jsonfn').JSONfn;
 const Promise = require('bluebird');
 const Primus = require('primus');
+const uuid = require('node-uuid');
 
 const log = require('../util/log').getLogger('ws-server');
 
@@ -14,6 +15,8 @@ const _connected = Symbol('connected');
 const _clients = Symbol('clients');
 const _master = Symbol('master');
 
+const _chunks = Symbol('chunks');
+
 class WebSocketServer {
   constructor(host, port) {
     this[_host] = host;
@@ -24,6 +27,8 @@ class WebSocketServer {
 
     this[_clients] = new Map();
     this[_master] = null;
+
+    this[_chunks] = new Map();
   }
 
   init() {
@@ -31,11 +36,11 @@ class WebSocketServer {
 
     return new Promise((resolve) => {
       this[_primus] = Primus.createServer({
-        hostname:           this[_host],
-        port:               this[_port],
-        transformer:        'uws',
+        hostname: this[_host],
+        port: this[_port],
+        transformer: 'uws',
         iknowhttpsisbetter: true,
-        parser:             'binary'
+        parser: 'binary'
       });
 
       this[_primus].on('connection', (spark) => {
@@ -91,7 +96,20 @@ class WebSocketServer {
 
       log.verbose(`WS server sending message to ${clientId}: `, message);
       const serializedMessage = JSONfn.stringify(message);
-      spark.write(serializedMessage);
+      if (serializedMessage.length > 1024 * 1000) {
+        log.debug('Serialized message is large, chunking it up.');
+        const id = uuid.v4();
+        spark.write({type: 'start', id: id});
+        let i = 0;
+        while (i < serializedMessage.length) {
+          spark.write({type: 'chunk', id: id, data: serializedMessage.slice(i, i + 1024 * 1001)});
+          i = i + 1024 * 1000;
+        }
+        spark.write({type: 'end', id: id});
+      } else {
+        log.debug('Serialized message is not too large, sending as one block.');
+        spark.write({type: 'fullChunk', data: serializedMessage});
+      }
     } else {
       throw new Error('WS server not online, cannot send message.');
     }

@@ -103,7 +103,7 @@ class GlintExecutor {
       return this[_reject](new Error('Job was not valid, terminating.'));
     }
 
-    log.debug(`Executing: ${this[_job].id}`);
+    log.info(`Job executor processing job with ID: ${this[_job].id}`);
     this[_status] = 'PROCESSING';
 
     // start the job
@@ -124,7 +124,7 @@ class GlintExecutor {
   }
 
   jobCompleted() {
-    log.debug('Job is complete, triggering completion.');
+    log.info('Job is complete, triggering completion.');
     this[_emitter].emit('job:completed');
   }
 
@@ -157,7 +157,7 @@ class GlintExecutor {
     }
 
     // nope, they don't - send 20% back as a starting point
-    log.debug(`We have never sent a block to client ${clientId}, sending back the default start value of 5.`);
+    log.debug(`We have never sent a block to client ${clientId}, sending back the default start value of 20.`);
     return 20;
   }
 
