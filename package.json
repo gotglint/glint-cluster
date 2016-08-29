@@ -1,6 +1,6 @@
 {
   "name": "@gotglint/glint-cluster",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Glint Cluster",
   "author": "Michael Laccetti <michael@laccetti.com> (https://laccetti.com)",
   "homepage": "https://github.com/gotglint/glint-cluster/",
@@ -29,7 +29,7 @@
     "glint": "run"
   },
   "dependencies": {
-    "@gotglint/glint-client": "0.0.5",
+    "@gotglint/glint-client": "0.0.6",
     "binary-pack": "1.0.2",
     "bluebird": "3.4.3",
     "bufferutil": "1.2.1",
