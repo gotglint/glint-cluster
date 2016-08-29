@@ -29,7 +29,7 @@
     "glint": "run"
   },
   "dependencies": {
-    "@gotglint/glint-client": "0.0.6",
+    "@gotglint/glint-client": "0.0.7",
     "binary-pack": "1.0.2",
     "bluebird": "3.4.3",
     "bufferutil": "1.2.1",
