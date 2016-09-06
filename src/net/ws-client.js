@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const Primus = require('primus');
 
 const log = require('../util/log').getLogger('ws-client');
-const WebSocketChunker = require('GlientClient');
+const WebSocketChunker = require('GlientClient').WebSocketChunker;
 
 const _id = Symbol('id');
 
@@ -14,7 +14,7 @@ const _connected = Symbol('connected');
 
 const _slave = Symbol('slave');
 
-const _chunker = Symbole('chunker');
+const _chunker = Symbol('chunker');
 
 class WebSocketClient {
   constructor(host, port) {
@@ -89,7 +89,7 @@ class WebSocketClient {
   sendMessage(message) {
     if (this[_connected] === true) {
       log.verbose('WS client sending message to server: ', message);
-      this[_chunker].sendMessage(client, message);
+      this[_chunker].sendMessage(this[_client], message);
     } else {
       throw new Error('WS server not online, cannot send message.');
     }

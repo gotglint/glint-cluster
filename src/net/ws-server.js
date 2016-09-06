@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const Primus = require('primus');
 
 const log = require('../util/log').getLogger('ws-server');
-const WebSocketChunker = require('../util/ws-chunker');
+const WebSocketChunker = require('GlientClient').WebSocketChunker;
 
 const _host = Symbol('host');
 const _port = Symbol('port');
@@ -14,7 +14,7 @@ const _connected = Symbol('connected');
 const _clients = Symbol('clients');
 const _master = Symbol('master');
 
-const _chunker = Symbole('chunker');
+const _chunker = Symbol('chunker');
 
 class WebSocketServer {
   constructor(host, port) {
@@ -42,14 +42,14 @@ class WebSocketServer {
         parser: 'binary'
       });
 
-      this[_chunker].registerCallback((deserialized) => {
-        if (this[_master]) {
-          this[_master].handleMessage(spark.id, deserialized);
-        }
-      });
-
       this[_primus].on('connection', (spark) => {
         log.debug('WS server client connected: ', spark);
+
+        this[_chunker].registerCallback((deserialized) => {
+          if (this[_master]) {
+            this[_master].handleMessage(spark.id, deserialized);
+          }
+        });
 
         spark.on('data', (data) => {
           this[_chunker].onMessage(data);
