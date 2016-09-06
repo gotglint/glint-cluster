@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const Primus = require('primus');
 
 const log = require('../util/log').getLogger('ws-client');
-const WebSocketChunker = require('GlientClient').WebSocketChunker;
+const WebSocketChunker = require('@gotglint/glint-client').WebSocketChunker;
 
 const _id = Symbol('id');
 
