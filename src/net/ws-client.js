@@ -1,8 +1,8 @@
-const JSONfn = require('jsonfn').JSONfn;
 const Promise = require('bluebird');
 const Primus = require('primus');
 
 const log = require('../util/log').getLogger('ws-client');
+const WebSocketChunker = require('GlientClient');
 
 const _id = Symbol('id');
 
@@ -14,7 +14,7 @@ const _connected = Symbol('connected');
 
 const _slave = Symbol('slave');
 
-const _chunks = Symbol('chunks');
+const _chunker = Symbole('chunker');
 
 class WebSocketClient {
   constructor(host, port) {
@@ -28,7 +28,7 @@ class WebSocketClient {
 
     this[_slave] = null;
 
-    this[_chunks] = new Map();
+    this[_chunker] = new WebSocketChunker(1024 * 1000);
   }
 
   init() {
@@ -41,40 +41,15 @@ class WebSocketClient {
       const Socket = Primus.createSocket({transformer: 'websockets', parser: 'binary'});
       this[_client] = new Socket(wsServer);
 
+      this[_chunker].registerCallback((deserialized) => {
+        if (this[_slave]) {
+          this[_slave].handleMessage(deserialized);
+        }
+      });
+
       this[_client].on('data', (data) => {
         log.verbose('WS client raw data: ', data);
-        if (data && data.type) {
-          switch(data.type) {
-            case 'start':
-              log.debug('Starting a new chunk for ID ' + data.id);
-              this[_chunks].set(data.id, '');
-              break;
-            case 'chunk':
-              log.debug('Adding to an existing chunk for ID ' + data.id);
-              const newChunk = this[_chunks].get(data.id) + data.data;
-              this[_chunks].set(data.id, newChunk);
-              break;
-            case 'end':
-              const deserialized = JSONfn.parse(this[_chunks].get(data.id));
-              this[_chunks].delete(data.id);
-              log.debug('WS client rehydrated a stream of chunks.');
-              log.verbose('WS client received a message: ', deserialized);
-
-              if (this[_slave]) {
-                this[_slave].handleMessage(deserialized);
-              }
-              break;
-            case 'fullChunk':
-              const fullChunkDeserialized = JSONfn.parse(data.data);
-              log.debug('WS client handled a full chunk.');
-              log.verbose('WS client received a message: ', fullChunkDeserialized);
-
-              if (this[_slave]) {
-                this[_slave].handleMessage(fullChunkDeserialized);
-              }
-              break;
-          }
-        }
+        this[_chunker].onMessage(data);
       });
 
       this[_client].on('error', (err) => {
@@ -113,9 +88,8 @@ class WebSocketClient {
    */
   sendMessage(message) {
     if (this[_connected] === true) {
-      const serializedMessage = JSONfn.stringify(message);
       log.verbose('WS client sending message to server: ', message);
-      this[_client].write(serializedMessage);
+      this[_chunker].sendMessage(client, message);
     } else {
       throw new Error('WS server not online, cannot send message.');
     }

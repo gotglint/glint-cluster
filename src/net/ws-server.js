@@ -1,9 +1,8 @@
-const JSONfn = require('jsonfn').JSONfn;
 const Promise = require('bluebird');
 const Primus = require('primus');
-const uuid = require('node-uuid');
 
 const log = require('../util/log').getLogger('ws-server');
+const WebSocketChunker = require('../util/ws-chunker');
 
 const _host = Symbol('host');
 const _port = Symbol('port');
@@ -15,7 +14,7 @@ const _connected = Symbol('connected');
 const _clients = Symbol('clients');
 const _master = Symbol('master');
 
-const _chunks = Symbol('chunks');
+const _chunker = Symbole('chunker');
 
 class WebSocketServer {
   constructor(host, port) {
@@ -28,7 +27,7 @@ class WebSocketServer {
     this[_clients] = new Map();
     this[_master] = null;
 
-    this[_chunks] = new Map();
+    this[_chunker] = new WebSocketChunker(1024 * 1000);
   }
 
   init() {
@@ -43,18 +42,20 @@ class WebSocketServer {
         parser: 'binary'
       });
 
+      this[_chunker].registerCallback((deserialized) => {
+        if (this[_master]) {
+          this[_master].handleMessage(spark.id, deserialized);
+        }
+      });
+
       this[_primus].on('connection', (spark) => {
         log.debug('WS server client connected: ', spark);
 
         spark.on('data', (data) => {
-          const deserialized = JSONfn.parse(data);
-          log.verbose('WS server received a message: ', deserialized);
+          this[_chunker].onMessage(data);
+          log.verbose('WS server received a message: ', data);
 
           this[_clients].set(spark.id, spark);
-
-          if (this[_master]) {
-            this[_master].handleMessage(spark.id, deserialized);
-          }
         });
       });
 
@@ -95,21 +96,7 @@ class WebSocketServer {
       }
 
       log.verbose(`WS server sending message to ${clientId}: `, message);
-      const serializedMessage = JSONfn.stringify(message);
-      if (serializedMessage.length > 1024 * 1000) {
-        log.debug('Serialized message is large, chunking it up.');
-        const id = uuid.v4();
-        spark.write({type: 'start', id: id});
-        let i = 0;
-        while (i < serializedMessage.length) {
-          spark.write({type: 'chunk', id: id, data: serializedMessage.slice(i, i + 1024 * 1001)});
-          i = i + 1024 * 1000;
-        }
-        spark.write({type: 'end', id: id});
-      } else {
-        log.debug('Serialized message is not too large, sending as one block.');
-        spark.write({type: 'fullChunk', data: serializedMessage});
-      }
+      this[_chunker].sendMessage(spark, message);
     } else {
       throw new Error('WS server not online, cannot send message.');
     }

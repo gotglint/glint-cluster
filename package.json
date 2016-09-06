@@ -36,7 +36,6 @@
     "colors": "1.1.2",
     "commander": "2.9.0",
     "intel": "1.1.1",
-    "jsonfn": "0.31.0",
     "lodash": "4.15.0",
     "node-uuid": "1.4.7",
     "object-sizeof": "^1.1.0",
